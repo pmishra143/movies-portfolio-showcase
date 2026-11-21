@@ -127,7 +127,7 @@ function insight() {
       .sort((a, b) => b[1] - a[1])
       .map(
         ([label, n]) =>
-          `<div class="bar-row"><span>${e(label)}</span><div class="bar"><span style="width:${(100 * n) / catalog.items.length}%"></span></div><strong>${n}</strong></div>`,
+          `<div class="bar-row"><span>${e(label)}</span><progress class="bar" max="${catalog.items.length}" value="${n}" aria-label="${e(label)}: ${n} titles"></progress><strong>${n}</strong></div>`,
       )
       .join("");
   }

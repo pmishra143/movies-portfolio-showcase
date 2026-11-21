@@ -9,7 +9,6 @@ RULES = {
     "database connection URI": r"(?:postgres(?:ql)?|mongodb(?:\+srv)?|mysql|redis|mssql)://[^\s\"']+",
     "provider credential assignment": r"(?i)(?:TMDB|OMDB|OPENAI|OPENROUTER)[A-Z_]*(?:KEY|TOKEN)\s*[:=]\s*['\"]?[A-Za-z0-9_./+-]{12,}",
     "private home path": r"/(?:Users|home)/[A-Za-z0-9_.-]+",
-    "private host": r"(?:movies|dashboard|trading)\.pmportals\.com",
     "personal address": r"[A-Za-z0-9_.+-]+@(?:gmail|outlook|yahoo)\.com",
     "private endpoint": r"(?:10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|root\x40)",
     "private key": r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
@@ -18,6 +17,16 @@ RULES = {
     "provider key": r"sk-[A-Za-z0-9_-]{24,}",
     "bearer credential": r"Bearer\s+[A-Za-z0-9._-]{25,}",
 }
+ALLOWED_URL_HOSTS = {"github.com", "pmishra143.github.io", "localhost", "127.0.0.1", "www.w3.org"}
+
+def finding_labels(text):
+    labels = [label for label, pattern in RULES.items() if re.search(pattern, text)]
+    for authority in re.findall(r"https?://([^/\s\"'<>]+)", text):
+        host = authority.split(":", 1)[0].lower()
+        if host not in ALLOWED_URL_HOSTS:
+            labels.append("non-allowlisted URL host")
+    return sorted(set(labels))
+
 issues = []
 count = 0
 for p in sorted(ROOT.rglob("*")):
@@ -47,9 +56,8 @@ for p in sorted(ROOT.rglob("*")):
     except UnicodeDecodeError:
         issues.append(f"{rel}: unexpected binary")
         continue
-    for label, pattern in RULES.items():
-        if re.search(pattern, text):
-            issues.append(f"{rel}: {label}")
+    for label in finding_labels(text):
+        issues.append(f"{rel}: {label}")
     if str(rel).startswith("docs/js/"):
         calls = re.findall(r"fetch\(\s*[\'\"]([^\'\"]+)", text)
         if any(x != "data/catalog.json" for x in calls):
@@ -98,9 +106,8 @@ if "--history" in sys.argv:
             text = raw.decode("utf-8")
         except UnicodeDecodeError:
             continue  # Curated demo PNGs were visually reviewed separately.
-        for label, pattern in RULES.items():
-            if re.search(pattern, text):
-                issues.append(f"history {oid[:12]} {name}: {label}")
+        for label in finding_labels(text):
+            issues.append(f"history {oid[:12]} {name}: {label}")
     log = subprocess.check_output(
         ["git", "log", "--all", "--format=fuller"], cwd=ROOT, text=True
     )

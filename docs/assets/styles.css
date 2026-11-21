@@ -763,3 +763,9 @@ pre {
 .author a {
   white-space: nowrap;
 }
+
+/* Native progress bars avoid inline style attributes under the strict CSP. */
+progress.bar { appearance: none; border: 0; width: 100%; }
+progress.bar::-webkit-progress-bar { background: #263f49; border-radius: 20px; }
+progress.bar::-webkit-progress-value { background: #a6e3c3; border-radius: 20px; }
+progress.bar::-moz-progress-bar { background: #a6e3c3; border-radius: 20px; }
