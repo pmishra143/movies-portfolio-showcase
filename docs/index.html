@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101820" />
+    <meta
+      name="description"
+      content="Pintu Mishra’s navigable movie-discovery engineering portfolio. Fictional demo data, isolated from the private app."
+    />
+    <title>Framefolio · Movie Discovery Engineering</title>
+    <link rel="icon" href="assets/001.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script type="module" src="js/app.mjs"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="demo-banner">
+      PUBLIC PORTFOLIO DEMO
+      <span
+        >Fictional titles, artwork, ratings and availability. Your selections
+        stay in this browser.</span
+      >
+    </div>
+    <div class="shell">
+      <header class="masthead">
+        <a class="brand" href="./" aria-label="Framefolio home"
+          ><span class="brand-mark" aria-hidden="true">F<span>↗</span></span
+          ><span
+            ><strong>Framefolio</strong
+            ><small>Discovery with a dependable foundation.</small></span
+          ></a
+        >
+        <div class="author">
+          <span>Built by <b>Pintu Mishra</b></span
+          ><a
+            href="https://github.com/pmishra143/movies-portfolio-showcase"
+            target="_blank"
+            rel="noopener"
+            >Explore the code ↗</a
+          >
+        </div>
+      </header>
+      <nav id="navigation" aria-label="Portfolio views">
+        <button data-tab="week" aria-pressed="true">This week</button
+        ><button data-tab="movies">Movies</button
+        ><button data-tab="series">Series</button
+        ><button data-tab="kids">Animation & kids</button
+        ><button data-tab="discover">Discover</button
+        ><button data-tab="saved">
+          Watchlist <span id="saved-count">0</span></button
+        ><button data-tab="analytics">Catalog insights</button
+        ><button data-tab="engineering">Behind the build ↗</button>
+      </nav>
+      <main id="main">
+        <section id="collection">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">A SMALL CATALOG. A CLEARER CHOICE.</p>
+              <h1 id="view-title">Make room for a good story.</h1>
+              <p id="view-description" class="muted">
+                Explore the weekly edit, find something unexpected, and keep a
+                shortlist.
+              </p>
+            </div>
+            <span id="snapshot" class="snapshot">Loading demo snapshot…</span>
+          </div>
+          <div id="service-notice" class="notice" role="status" hidden></div>
+          <div id="loading" class="loading" role="status">
+            Loading the sample catalog…
+          </div>
+          <div id="load-error" class="notice error" role="alert" hidden>
+            <h2>The sample catalog could not be loaded.</h2>
+            <p>
+              No data is being presented as current. Retry to load the bundled
+              fixture.
+            </p>
+            <button id="retry-load">Retry catalog</button>
+          </div>
+          <section
+            id="weekly-edit"
+            aria-label="Weekly selection"
+            hidden
+          ></section>
+          <form id="filters" class="filters" role="search">
+            <label class="search-label"
+              >Search the collection<input
+                id="search"
+                type="search"
+                placeholder="Try “observatory”, “monsoon”, or “animation”…"
+                autocomplete="off" /></label
+            ><label
+              >Language<select id="language">
+                <option value="">All languages</option>
+                <option>English</option>
+                <option>Hindi</option>
+                <option>International</option>
+              </select></label
+            ><label
+              >Genre<select id="genre">
+                <option value="">All genres</option>
+                <option>Drama</option>
+                <option>Thriller</option>
+                <option>Adventure</option>
+                <option>Animation</option>
+                <option>Comedy</option>
+                <option>Science fiction</option>
+              </select></label
+            ><label
+              >Platform<select id="platform">
+                <option value="">All demo platforms</option>
+                <option>Orbit Stream</option>
+                <option>Lantern+</option>
+                <option>Frame House</option>
+              </select></label
+            ><label
+              >Sort<select id="sort">
+                <option value="quality">Quality blend</option>
+                <option value="newest">Newest fixture release</option>
+                <option value="votes">Most sample votes</option>
+              </select></label
+            ><button type="button" id="clear">Reset filters</button>
+          </form>
+          <div class="results-heading">
+            <p id="result-count" aria-live="polite"></p>
+            <p class="muted small">
+              All scores are illustrative · no real streaming offers
+            </p>
+          </div>
+          <div id="grid" class="grid"></div>
+          <div id="empty" class="empty" hidden>
+            <h2>A little more room to explore.</h2>
+            <p id="empty-message">Try another filter combination.</p>
+            <button id="empty-reset">Reset filters</button>
+          </div>
+        </section>
+        <section id="insights" hidden>
+          <p class="eyebrow">A TRANSPARENT SNAPSHOT</p>
+          <h1>What’s in the collection?</h1>
+          <p class="muted">
+            Computed from the same 24-title fixture you can explore. These are
+            catalog counts, not production usage metrics.
+          </p>
+          <div id="insight-metrics" class="metrics"></div>
+          <div class="insight-columns">
+            <article class="panel">
+              <h2>By language</h2>
+              <div id="language-chart"></div>
+            </article>
+            <article class="panel">
+              <h2>By genre</h2>
+              <div id="genre-chart"></div>
+            </article>
+          </div>
+          <article class="panel">
+            <h2>How ranking works</h2>
+            <p>
+              The quality blend adapts a function from the private app. It
+              combines an audience score, a critic score scaled to ten, and a
+              capped vote-confidence contribution. Missing critic scores fall
+              back to the audience score.
+            </p>
+            <pre>
+score = audience × 0.55 + critic/10 × 0.35
+      + min(2, sqrt(votes / 100000)) × 0.10</pre>
+            <p class="muted">
+              This heuristic is not a calibrated recommendation model, and the
+              displayed rating is the audience fixture score, not the blend.
+            </p>
+          </article>
+        </section>
+        <section id="engineering" hidden>
+          <p class="eyebrow">
+            FROM A PERSONAL PRODUCT TO A REVIEWABLE PORTFOLIO
+          </p>
+          <h1>A good experience needs<br />a trustworthy foundation.</h1>
+          <p class="lead">
+            This public edition isolates the discovery workflow from the private
+            working app. Explore the code, inspect the data contract, and try a
+            bounded failure exercise.
+          </p>
+          <div class="engineering-grid">
+            <article class="panel">
+              <span class="step">01 / SOURCE BOUNDARY</span>
+              <h2>Related to real work. Honest about scope.</h2>
+              <p>
+                The private app includes scheduled catalog ingestion,
+                multi-source discovery, metadata enrichment, cached catalog
+                serving and user preferences. This public edition reimplements a
+                focused browsing experience using original fictional data. It
+                does not call those private services.
+              </p>
+              <p>
+                The ranking formula is adapted from the original browser code.
+                The static frontend, fixture pipeline and recovery exercise in
+                this repo are newly written showcase components.
+              </p>
+              <a
+                href="https://github.com/pmishra143/movies-portfolio-showcase/blob/main/docs/PROVENANCE.md"
+                target="_blank"
+                rel="noopener"
+                >Read the provenance record ↗</a
+              >
+            </article>
+            <article class="panel">
+              <span class="step">02 / DATA CONTRACT</span>
+              <h2>Validate before publishing.</h2>
+              <p>
+                The reproducible pipeline checks schema, stable identity,
+                uniqueness, dates, ratings and platform names. It produces a
+                deterministic snapshot and a checksum manifest. Failed
+                validation leaves the previous published artifact intact.
+              </p>
+              <div class="flow" aria-label="Demo publication pipeline">
+                <span>Fictional input</span><b>→</b><span>Contract checks</span
+                ><b>→</b><span>Atomic snapshot</span><b>→</b
+                ><span>Static serving</span>
+              </div>
+            </article>
+            <article class="panel">
+              <span class="step">03 / FAILURE EXERCISE</span>
+              <h2>Availability is not freshness.</h2>
+              <p id="recovery-status" role="status">
+                Normal demo state: the bundled snapshot is available. Its date
+                is explicit; no live-provider health is claimed.
+              </p>
+              <div class="button-row">
+                <button id="simulate-failure">Simulate a failed refresh</button
+                ><button id="recover" hidden>Restore demo state</button>
+              </div>
+              <p class="muted small">
+                Local UI simulation. It retains the loaded fixture and shows
+                degraded status; it does not inject a fault into the private
+                app.
+              </p>
+            </article>
+            <article class="panel">
+              <span class="step">04 / OPERATING PRACTICES</span>
+              <h2>Evidence over uptime claims.</h2>
+              <p>
+                Unit tests cover filtering, ranking, validation and
+                browser-storage failures. Pipeline tests cover rejected input
+                and preservation of the last published snapshot. Browser checks
+                exercise navigation, dialogs, saved lists, failure states and
+                mobile layout.
+              </p>
+              <p>
+                This portfolio does not claim production throughput, uptime,
+                MTTR improvements or Disney affiliation.
+              </p>
+              <a
+                href="https://github.com/pmishra143/movies-portfolio-showcase/blob/main/README.md"
+                target="_blank"
+                rel="noopener"
+                >Setup, tests and architecture ↗</a
+              >
+            </article>
+          </div>
+        </section>
+      </main>
+      <footer>
+        <div>
+          <strong>Framefolio</strong>
+          <p>Independent engineering portfolio · Pintu Mishra</p>
+        </div>
+        <p>
+          Original fictional content and artwork.<br />No sign-in, analytics,
+          tracking pixels or private service access.
+        </p>
+        <button id="reset-demo">Clear this browser’s demo selections</button>
+      </footer>
+    </div>
+    <dialog id="detail" aria-labelledby="detail-title">
+      <div id="detail-content"></div>
+      <button
+        id="close-detail"
+        class="dialog-close"
+        aria-label="Close title details"
+      >
+        ×
+      </button>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>
