@@ -2,7 +2,7 @@
 
 ## Release checklist
 
-1. Run the Node and Python suites and `python3 tools/audit_public.py`.
+1. Run the Node and Python suites and `python3 tools/audit_public.py --history`.
 2. Regenerate the fixture only when intentionally changing the sample content. Keep `demo: true`, stable IDs and an explicit snapshot date.
 3. Run the snapshot builder to a temporary destination. Review its count and checksum, and inspect any schema changes in both validators.
 4. Serve `docs/` locally and run `tools/verify-browser.cjs` with Playwright installed outside the release payload. Capture reviewed screenshots using fictional data only.

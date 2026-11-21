@@ -4,6 +4,25 @@ A navigable public edition of a personal movie-discovery product, prepared by **
 
 **[Open the demo](https://pmishra143.github.io/movies-portfolio-showcase/)** · [Architecture](docs/ARCHITECTURE.md) · [Source provenance](docs/PROVENANCE.md) · [Operating guide](docs/OPERATING-GUIDE.md)
 
+## System overview
+
+```mermaid
+flowchart LR
+    Input[Original fictional catalog] --> Validate[Schema and identity checks]
+    Validate --> Publish[Atomic snapshot publication]
+    Publish --> Static[GitHub Pages static files]
+    Static --> UI[JavaScript discovery UI]
+    UI --> Saved[Browser-local watchlist]
+    Publish -. optional local example .-> API[Read-only Python REST API]
+    API --> Cache[Validated cache, gzip and ETag]
+    Tests[Node and Python unittest checks] -. verify .-> Validate
+    Tests -. verify .-> API
+```
+
+**Public stack:** JavaScript modules and CSS, a Python snapshot pipeline, an optional local REST API, Node tests, Python `unittest`, and GitHub Actions. Invalid or duplicate records are rejected before publication; failed validation preserves the previous snapshot. The API example can retain a validated snapshot while explicitly marking its source degraded.
+
+**Private-app boundary:** scheduled multi-source ingestion and metadata enrichment belong to the private working app. The hosted public demo uses a bundled fictional snapshot; it does not run a scheduler, contact providers, expose the local API or claim production metrics. The failed-refresh exercise is an explicit UI simulation. This project uses neither React nor `pytest`.
+
 ![Framefolio demo, desktop](docs/assets/demo-desktop.png)
 
 ## Try it in two minutes
@@ -48,7 +67,7 @@ python3 tools/make_fixtures.py
 python3 pipeline/build.py docs/data/catalog.json /tmp/framefolio-catalog.json
 
 # Check the public working tree for prohibited files, sensitive strings and remote dependencies
-python3 tools/audit_public.py
+python3 tools/audit_public.py --history
 ```
 
 `package.json` is marked private to prevent accidental npm publication; the GitHub repository itself is public. GitHub Pages serves only `docs/`.
